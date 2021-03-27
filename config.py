@@ -2,6 +2,7 @@ import os
 
 
 class Config(object):
+    # TODO Check for availability of environment variable
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    MAX_CONTENT_LENGTH = 1024 * 1024 * 5  # max 5 MB file
-    UPLOAD_EXTENSIONS = ['.pdf']
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
