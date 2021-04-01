@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>File Delivery</h1>
+<form method="post" action="" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <p>{{ form.file.label }} {{ form.file }}</p>
+    <p>{{ form.email_recipient.label }} {{ form.email_recipient(size=32) }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
