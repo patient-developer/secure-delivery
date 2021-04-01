@@ -1,15 +1,16 @@
+from io import BytesIO
+
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from flask import render_template, redirect, flash, url_for
 from flask_login import login_user, login_required
-
 from werkzeug.utils import secure_filename
 
 from app import app
 from app.forms import LoginForm, FileForm
 from app.models import User
-
-from .emails import send_mail
-
 from config import Config
+from .emails import send_mail
+from .security import get_password
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -30,14 +31,32 @@ def login():
 def delivery():
     file_form = FileForm()
     if file_form.validate_on_submit():
-        flash('Will deliver ' + file_form.file.name)
+        password = get_password()
         filename = secure_filename(file_form.file.data.filename)
-        send_mail(
-            '!!! TEST !!!',
-            Config.ADMINS[0],
-            [file_form.email_recipient.data],
-            'Zustellung von ' + filename,
-            filename,
-            file_form.file.data.read())
+
+        out = PdfFileWriter()
+        file = PdfFileReader(BytesIO(file_form.file.data.read()))
+
+        for page in range(file.numPages):
+            out.addPage(file.getPage(page))
+
+        out.encrypt(password)
+
+        attachment = BytesIO()
+
+        out.write(attachment)
+
+        send_mail('Attachment',
+                  Config.ADMINS[0],
+                  [file_form.email_recipient.data],
+                  'Zustellung von ' + filename,
+                  filename,
+                  attachment.getvalue())
+
+        send_mail('Password',
+                  Config.ADMINS[0],
+                  [file_form.email_recipient.data],
+                  password, None, None)
+
         return redirect(url_for('delivery'))
     return render_template('delivery.html', form=file_form)
