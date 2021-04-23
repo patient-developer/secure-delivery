@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileRequired
 from wtforms import SubmitField, StringField, PasswordField, BooleanField, FileField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 
 
 class LoginForm(FlaskForm):
@@ -17,3 +17,9 @@ class FileForm(FlaskForm):
     file = FileField('Filename', validators=[FileRequired()])
     email_recipient = StringField('E-Mail Recipient', validators=[DataRequired()])
     submit = SubmitField('Deliver')
+
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('E-Mail', validators=[DataRequired(), Email()])
+    submit = SubmitField('Register')
