@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileRequired
-from wtforms import SubmitField, StringField, PasswordField, BooleanField, FileField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email
 
 
@@ -10,13 +9,6 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
-
-
-class FileForm(FlaskForm):
-    # TODO dynamically provide EN or DE labels
-    file = FileField('Filename', validators=[FileRequired()])
-    email_recipient = StringField('E-Mail Recipient', validators=[DataRequired()])
-    submit = SubmitField('Deliver')
 
 
 class RegisterForm(FlaskForm):
