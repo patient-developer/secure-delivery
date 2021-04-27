@@ -37,7 +37,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit tests / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -50,6 +50,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+coverage/
 
 # Translations
 *.mo
@@ -106,6 +107,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+unix-venv/
 ENV/
 env.bak/
 venv.bak/

@@ -25,8 +25,10 @@ def create_app(config_name):
 
     from .auth import blueprint as auth_blueprint
     from .delivery import blueprint as delivery_blueprint
+    from .landing import blueprint as landing_blueprint
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(delivery_blueprint, url_prefix='/delivery')
+    app.register_blueprint(landing_blueprint, url_prefix='/')
 
     return app

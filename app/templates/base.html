@@ -1,5 +1,23 @@
 <html>
-  <body>
-    {% block content %}{% endblock %}
-  </body>
+<body>
+<div>
+    Sichere Zustellung:
+    <a href="{{ url_for('landing.index') }}">Index</a>
+    <a href="{{ url_for('auth.login') }}">Login</a>
+    <a href="{{ url_for('auth.logout') }}">Logout</a>
+    <a href="{{ url_for('auth.register') }}">Registration</a>
+    <a href="{{ url_for('delivery.delivery') }}">Zustellung</a>
+</div>
+<hr>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% block content %}{% endblock %}
+</body>
 </html>
