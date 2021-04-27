@@ -1,7 +1,7 @@
 from io import BytesIO
 
 from PyPDF2 import PdfFileWriter, PdfFileReader
-from flask import render_template, url_for
+from flask import render_template, url_for, flash
 from flask_login import login_required
 from werkzeug.utils import secure_filename, redirect
 
@@ -45,4 +45,6 @@ def delivery():
                   password, None, None)
 
         return redirect(url_for('.delivery'))
+    if 'email_recipient' in file_form.errors:
+        flash(file_form.errors['email_recipient'])
     return render_template('delivery.html', form=file_form)
