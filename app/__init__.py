@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -25,8 +25,14 @@ def create_app(config_name):
 
     from .auth import blueprint as auth_blueprint
     from .delivery import blueprint as delivery_blueprint
+    from .landing import blueprint as landing_blueprint
+
+    @delivery_blueprint.app_errorhandler(500)
+    def internal_server_error(e):
+        return render_template('500.html'), 500
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(delivery_blueprint, url_prefix='/delivery')
+    app.register_blueprint(landing_blueprint, url_prefix='/')
 
     return app

@@ -4,7 +4,6 @@ from wtforms.validators import DataRequired, Email
 
 
 class LoginForm(FlaskForm):
-    # TODO dynamically provide EN or DE labels
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')

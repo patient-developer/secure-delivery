@@ -33,10 +33,40 @@ class Role(db.Model):
     def __init__(self, **kwargs):
         super(Role, self).__init__(**kwargs)
 
+    def add_permission(self, perm):
+        if not self.has_permission(perm):
+            self.permissions += perm
+
+    def reset_permissions(self):
+        self.permissions = 0
+
     def has_permission(self, perm):
         return self.permissions & perm == perm
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            RoleName.USER: [Permission.DELIVER],
+            RoleName.ADMIN: [Permission.DELIVER, Permission.REGISTER]
+        }
+        default_role = 'User'
+        for role in roles:
+            db_role = Role.query.filter_by(name=role).first()
+            if db_role is None:
+                db_role = Role(name=role)
+            db_role.reset_permissions()
+            for perm in roles[role]:
+                db_role.add_permission(perm)
+            db_role.default = (db_role.name == default_role)
+            db.session.add(db_role)
+        db.session.commit()
 
 
 class Permission:
     DELIVER = 1
     REGISTER = 2
+
+
+class RoleName:
+    USER = 'User'
+    ADMIN = 'Admin'

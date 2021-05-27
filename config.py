@@ -4,6 +4,11 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
+DEVELOPMENT = 'development'
+TESTING = 'testing'
+PRODUCTION = 'production'
+DEFAULT = 'default'
+
 
 class Config(object):
     # TODO Check for availability of environment variable
@@ -28,6 +33,7 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
+    WTF_CSRF_ENABLED = False
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
@@ -37,9 +43,9 @@ class ProductionConfig(Config):
 
 
 config = {
-    'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'production': ProductionConfig,
+    DEVELOPMENT: DevelopmentConfig,
+    TESTING: TestingConfig,
+    PRODUCTION: ProductionConfig,
 
-    'default': DevelopmentConfig
+    DEFAULT: DevelopmentConfig
 }
