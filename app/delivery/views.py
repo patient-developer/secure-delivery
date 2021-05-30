@@ -10,6 +10,7 @@ from app.delivery.forms import FileForm
 from app.emails import send_mail
 from app.security import get_password
 from config import Config
+from ..pdfhelper import provide_pdf_file_reader
 
 
 @blueprint.route('/send-mail', methods=['GET', 'POST'])
@@ -17,14 +18,20 @@ from config import Config
 def delivery():
     file_form = FileForm()
     if file_form.validate_on_submit():
-        password = get_password()
-        filename = secure_filename(file_form.file.data.filename)
+
+        reader, is_ok = provide_pdf_file_reader(BytesIO(file_form.file.data.read()))
+
+        if not is_ok:
+            flash('Invalid pdf file provided.')
+            return render_template('delivery.html', form=file_form)
 
         out = PdfFileWriter()
-        file = PdfFileReader(BytesIO(file_form.file.data.read()))
 
-        for page in range(file.numPages):
-            out.addPage(file.getPage(page))
+        for page in range(reader.numPages):
+            out.addPage(reader.getPage(page))
+
+        password = get_password()
+        filename = secure_filename(str(file_form.file.data.filename).strip())
 
         out.encrypt(password)
 
@@ -45,6 +52,8 @@ def delivery():
                   password, None, None)
 
         return redirect(url_for('.delivery'))
-    if 'email_recipient' in file_form.errors:
-        flash(file_form.errors['email_recipient'])
+
+    if len(file_form.errors) > 0:
+        for error in file_form.errors.values():
+            flash(str(error))
     return render_template('delivery.html', form=file_form)

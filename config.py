@@ -12,6 +12,7 @@ DEFAULT = 'default'
 
 class Config(object):
     # TODO Check for availability of environment variable
+    BASE_URL = os.environ.get('BASE_URL')
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
@@ -21,6 +22,7 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = [os.environ.get('MAIL_USERNAME')]
+    MAX_CONTENT_LENGTH = int(os.environ.get('MAX_MEGA_BYTE_SIZE')) * 1024 * 1024
 
     @staticmethod
     def init_app(app):
