@@ -18,8 +18,8 @@ from config import Config
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        user = User.query.filter_by(username=login_form.username.data).first()
-        if user is None or not user.check_password(login_form.password.data):
+        user = User.query.filter_by(username=str(login_form.username.data).strip()).first()
+        if user is None or not user.check_password(str(login_form.password.data).strip()):
             flash('Invalid username or password.')
             return redirect(url_for('.login'))
         login_user(user, remember=login_form.remember_me.data)
@@ -47,7 +47,7 @@ def register():
 
     register_form = RegisterForm()
     if register_form.validate_on_submit():
-        username = register_form.username.data
+        username = str(register_form.username.data).strip()
         password = get_password()
 
         user = User(username=username, password_hash=generate_password_hash(password), role_id=1)
@@ -55,9 +55,22 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        email = register_form.email.data
-        send_mail('Password', Config.ADMINS[0], [email], password, None, None)
+        recipient = register_form.email.data
 
-        flash('Successfully registered user {} and sent password to {}'.format(username, email))
+        send_mail('Benutzername', Config.ADMINS[0], [recipient], welcome_message(username), None, None)
+        send_mail('Password', Config.ADMINS[0], [recipient], password_message(password), None, None)
+
+        flash('Successfully registered user {} and sent password to {}'.format(username, recipient))
         return redirect(url_for('landing.index'))
     return render_template('register.html', form=register_form)
+
+
+def welcome_message(username: str):
+    return 'Hallo,\n\nvielen Dank, dass Sie Verschluesselter Anhang nutzen auf\n\n  {}{}\n\n' \
+           'Sie haben den Benuternamen\n\n {}\n\nSie erhalten in Kuerze per E-Mail Ihr Passwort.' \
+        .format(Config.BASE_URL, url_for('landing.index'), username)
+
+
+def password_message(password: str):
+    return 'Hallo,\n\nanbei Ihr Passwort\n\n  {}\n\nSie koennen sich nun anmelden unter\n\n {}{}' \
+        .format(password, Config.BASE_URL, url_for('auth.login'))

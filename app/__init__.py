@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from config import config
 
@@ -30,6 +31,11 @@ def create_app(config_name):
     @delivery_blueprint.app_errorhandler(500)
     def internal_server_error(e):
         return render_template('500.html'), 500
+
+    @delivery_blueprint.app_errorhandler(413)
+    @delivery_blueprint.app_errorhandler(RequestEntityTooLarge)
+    def request_entity_too_large(e):
+        return render_template('413.html'), 413
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(delivery_blueprint, url_prefix='/delivery')
