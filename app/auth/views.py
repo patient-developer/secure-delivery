@@ -48,6 +48,10 @@ def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
         username = str(register_form.username.data).strip()
+        if User.query.filter_by(username=username).first() is not None:
+            flash('Username {} already registered.'.format(username))
+            return render_template('register.html', form=register_form)
+
         password = get_password()
 
         user = User(username=username, password_hash=generate_password_hash(password), role_id=1)
@@ -67,7 +71,7 @@ def register():
 
 def welcome_message(username: str):
     return 'Hallo,\n\nvielen Dank, dass Sie Verschluesselter Anhang nutzen auf\n\n  {}{}\n\n' \
-           'Sie haben den Benuternamen\n\n {}\n\nSie erhalten in Kuerze per E-Mail Ihr Passwort.' \
+           'Sie haben den Benutzernamen\n\n {}\n\nSie erhalten in Kuerze per E-Mail Ihr Passwort.' \
         .format(Config.BASE_URL, url_for('landing.index'), username)
 
 
