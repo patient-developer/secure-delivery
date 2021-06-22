@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -12,6 +13,7 @@ migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
 mail = Mail()
+bootstrap = Bootstrap()
 
 
 def create_app(config_name):
@@ -23,6 +25,7 @@ def create_app(config_name):
     migrate.init_app(app, db)
     login.init_app(app)
     mail.init_app(app)
+    bootstrap.init_app(app)
 
     from .auth import blueprint as auth_blueprint
     from .delivery import blueprint as delivery_blueprint

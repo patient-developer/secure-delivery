@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div>Willkommen zur sicheren Zustellung.</div>
+{% block app_content %}
+<div xmlns="http://www.w3.org/1999/html">
+    <p>
+        Willkommen zu dem kleinen Projekt <em>Verschlüsselter Anhang</em>.
+    </p>
+    <p>
+        Mit diesem Webservice lassen sich pdf-Dateien als E-Mail Anhang verschicken, die mittels <a href="https://pypi.org/project/PyPDF2/">PyPDF2</a> verschlüsselt werden.</br>
+        Der/die Empfänger/in erhält von der E-Mail Adresse <tt>zustellung@verschluesselter-anhang.de</tt> zwei E-Mails: Eine E-Mail mit der verschlüsselten pdf-Datei als Anhang und eine weitere E-Mail mit dem Passwort.</br>
+        Zu beachten ist, dass die pdf-Datei gänzlich verschlüsselt ist, d.h. um sie wiederkehrend zu lesen, muss erneut das Passwort eingegeben werden, sofern der verwendete pdf Reader dieses nicht speichert oder die Möglichkeit bietet die pdf-Datei final zu entschlüsseln.
+    </p>
+    <p>
+        Der Webservice ist in <a href="https://flask.palletsprojects.com/en/2.0.x/">Python (Flask)</a> geschrieben und läuft bei <a href="https://uberspace.de/de/">Uberspace</a>. Von registrierten Benutzer/innen werden lediglich deren Benutzernamen und Passwort gespeichert. Die E-Mails werden mittels <a href="https://www.ionos.de/office-loesungen/eigene-email-adresse">IONOS</a> verschickt.
+    </p>
+    <p>
+        Der Quellcode ist auf <a href="https://github.com/patient-developer/secure-delivery">Github</a> zu finden.
+    </p>
+</div>
 {% endblock %}
