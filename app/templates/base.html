@@ -1,23 +1,40 @@
-<html>
-<body>
-<div>
-    Sichere Zustellung:
-    <a href="{{ url_for('landing.index') }}">Index</a>
-    <a href="{{ url_for('auth.login') }}">Login</a>
-    <a href="{{ url_for('auth.logout') }}">Logout</a>
-    <a href="{{ url_for('auth.register') }}">Registration</a>
-    <a href="{{ url_for('delivery.delivery') }}">Zustellung</a>
-</div>
-<hr>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
-{% block content %}{% endblock %}
-</body>
-</html>
+{% extends "bootstrap/base.html" %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle Navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('landing.index') }}">Start</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('auth.login') }}">Anmelden</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">Abmelden</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Registration</a></li>
+                    <li><a href="{{ url_for('delivery.delivery') }}">Zustellung</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
